@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+	<title>WAPS Application</title>
+	<script type="text/javascript">
+		function quit() {
+			alert
+			document.getElementById("main").innerHTML = '<p style="text-align: center;">Application Terminated</p>';
+		}
+		function addText(x, y, msg) {
+			//alert(y);
+			msg = '<span style="z-index: 5; position: absolute; left: ' + x/2 + 'cm; top: ' + y/4 + 'cm;">' + msg + '</span>';ina[i].indexOf(" ") + 1
+			document.getElementById("main").innerHTML += msg;
+ 		}
+ 		function loop() {
+ 			getOutput();
+ 			window.setTimeout("loop()", 1500);
+ 		}
+ 		function sends(tosend) {
+ 			var xmlHttp2;
+  			try {
+    				xmlHttp2=new XMLHttpRequest();
+    			} catch (e) {
+    			try {
+      				xmlHttp2=new ActiveXObject("Msxml2.XMLHTTP");
+   			} catch (e) {
+      			try {
+        			xmlHttp2=new ActiveXObject("Microsoft.XMLHTTP");
+        		} catch (e) {
+        			alert("Your browser does not support AJAX!");
+        			return false;
+        		}
+      			}
+    			}
+   			xmlHttp2.onreadystatechange=function()
+      			{
+				if(xmlHttp2.readyState==4)
+       				{
+       					//alert(xmlHttp2.responseText);
+       				}
+      			}
+    			xmlHttp2.open("GET","input.php?input=" + escape(tosend),true);
+    			xmlHttp2.send(null);
+ 		}
+ 		function getOutput() {
+  			var xmlHttp;
+  			try {
+    				xmlHttp=new XMLHttpRequest();
+    			} catch (e) {
+    			try {
+      				xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+   			} catch (e) {
+      			try {
+        			xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+        		} catch (e) {
+        			alert("Your browser does not support AJAX!");
+        			return false;
+        		}
+      			}
+    			}
+   			xmlHttp.onreadystatechange=function()
+      			{
+                         if(xmlHttp.readyState==4)
+       			{
+                        toparse = xmlHttp.responseText;
+        		ina = new Array();
+ 			ina = toparse.split("\n");
+ 			//alert(toparse);
+ 			for(i = 0; i < ina.length; i++) {
+ 				//alert(ina[i]);
+ 				if(ina[i].substr(0, 4) == "QUIT") {
+ 					quit();
+ 				} else if(ina[i].substr(0, 1) == "[") {
+ 					msg = ina[i].substr(ina[i].indexOf("] ") + 2);
+ 					x = ina[i].substr(1, ina[i].indexOf(" "));
+ 					y = ina[i].substr(ina[i].indexOf(" ") + 1, ina[i].indexOf("]") - (ina[i].indexOf(" ") + 1));
+ 					//alert(y);
+ 					addText(x, y, msg);
+ 				} else if(ina[i] == "NEW WINDOW") {
+ 					document.getElementById("main").innerHTML = '';
+ 				} else if(ina[i].substr(0, 5) == "INPUT") {
+ 					type = ina[i].substr(ina[i].indexOf("[") + 1, ina[i].indexOf("]") - (ina[i].indexOf("[") + 1));
+ 					var tosend;
+ 					if(type == "CH") {
+ 						tosend = prompt("Please enter a character: ");
+ 					} else {
+ 						tosend = prompt("Please enter a string: ");
+ 					}
+ 					sends(tosend);
+ 				}
+ 			}
+        		}
+      			}
+    			xmlHttp.open("GET","output.php",true);
+    			xmlHttp.send(null);
+  		}
+	</script>
+	<style type="text/css">
+		div.window {
+			border: 3px orange solid;
+			height: 12cm;
+			width: 17.5cm;
+		}
+		h1 {
+			text-align: center;
+		}
+	</style>
+	</head>
+	<body onload="loop()">
+	<div class="window" id="main">
+	</div>
+	</body>
+</html>
